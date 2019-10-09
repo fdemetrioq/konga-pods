@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: "true"
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: konga
+  name: konga
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: konga
+    spec:
+      containers:
+      - env:
+        - name: DB_ADAPTER
+          value: mongo
+        - name: DB_DATABASE
+          value: konga
+        - name: DB_HOST
+          value: mongo
+        - name: NODE_ENV
+          value: production
+        image: pantsel/konga:0.13.0
+        name: konga
+        resources: {}
+      restartPolicy: Always
+status: {}

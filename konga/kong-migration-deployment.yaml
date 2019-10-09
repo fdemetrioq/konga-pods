@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    io.rancher.container.start_once: "true"
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kong-migration
+  name: kong-migration
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kong-migration
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - kong migrations up && sleep 30
+        env:
+        - name: KONG_DATABASE
+          value: postgres
+        - name: KONG_PG_HOST
+          value: kong-database
+        image: kong:0.14.1
+        name: kong-migration
+        resources: {}
+        tty: true
+      restartPolicy: Always
+status: {}
